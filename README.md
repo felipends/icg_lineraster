@@ -23,7 +23,7 @@ Porém esta abordagem vale apenas para retas de coeficiente angular no intervalo
 
 ### Implementação
 
-Nesta função são passados como parâmetros $x0, y0, x1, y1, color_0, color_1$, sendo os dois primeiros as coordenadas do primeiro pixel, os dois seguintes as coordenadas do úlitmo e os dois últimos as cores inicial e final da linha, que mais tarde são interpoladas ao decorrer dela. Com isso podemos calcular os valores de $\Delta$, onde temos que $\Delta x = x1 - x0$ e $\Delta y = y1 - y0$. Em seguida, calculamos o **D**, $d = 2 \Delta y - \Delta x$, assim como, os incremementos da variável de decisão definidos por $inc_L = 2 \Delta y$ e $inc_NE = 2 * (\Delta y - \Delta x)$.
+Num primeiro momento foi implementada apenas a função **MidPointLineAlgorithm**. Nesta função são passados como parâmetros $x0, y0, x1, y1, color_0, color_1$, sendo os dois primeiros as coordenadas do primeiro pixel, os dois seguintes as coordenadas do úlitmo e os dois últimos as cores inicial e final da linha, que mais tarde são interpoladas ao decorrer dela. Com isso podemos calcular os valores de $\Delta$, onde temos que $\Delta x = x1 - x0$ e $\Delta y = y1 - y0$. Em seguida, calculamos o **D**, $d = 2 \Delta y - \Delta x$, assim como, os incremementos da variável de decisão definidos por $inc_L = 2 \Delta y$ e $inc_NE = 2 * (\Delta y - \Delta x)$.
 
 Feito isso, iniciaremos os valores de x e y da seguinte forma, $x = x0$ e $y = y0$ e colorimos o pixel de coordenadas (x,y) com auxilio da função PutPixel, presente no framework fornecido pelo professor.
 
