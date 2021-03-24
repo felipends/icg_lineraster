@@ -13,11 +13,15 @@ Existem diversos algoritmos para desempenhar tal tarefa. Neste Trabalho foi util
 
 ### Algoritmo de Bresenham
 
-O algoritmo funciona de forma incremental, levando em conta o pixel anterior para escolher o seguinte. Como o pixel inicial é um vértice conhecido de coordenadas (x0, y0), escolhem-se os seguintes a partir dele, os candidatos são sempre o pixel imediatamente a leste (E) de coordenadas (x0+1, y0) ou a nordeste (NE) de coordenadas (x0+1, y0+1). Tal escolha é feita avaliando a posição da reta em relação ao ponto médio entre os pixels candidatos, tal ponto tem coordenadas (x0+1, y0+0,5). Tal processo se repete para os demais vértices (xi, yi) até que seja alcançado o vértice final (x1, y1).
+O algoritmo funciona de forma incremental, levando em conta o pixel anterior para escolher o seguinte. Como o pixel inicial é um vértice conhecido de coordenadas (x0, y0), escolhem-se os seguintes a partir dele. Os candidatos são sempre o pixel imediatamente a leste (E) de coordenadas (x0+1, y0) ou a nordeste (NE) de coordenadas (x0+1, y0+1). 
 
-Para avaliar a posição da reta em relação ao ponto médio citado no parágrafo anterior, é calculado o valor da equação implícita da reta naquele ponto ($D(x+1,y+0,5) = a(x+1) + b(y+0,5) + c$) sendo $a = \Delta y$, $b = - \Delta x$ e $c = \Delta x * l$, caso o valor da equação seja 0, significa que a reta passa pelo ponto médio e o pixel E é escolhido e o próximo valor de decisão é dado por $D = D(x+1,y+0,5) + a$, o mesmo acontece caso o valor da equação seja positivo, caso contrário o pixel NE é escolhido e o próximo valor de decisão é dado por $D = D(x+1,y+0,5) + a + b$. 
+A escolha do pixel é feita avaliando a posição da reta em relação ao ponto médio entre os pixels candidatos, tal ponto tem coordenadas (x0+1, y0+0,5). Este processo se repete para os demais vértices (xi, yi) até que seja alcançado o vértice final (x1, y1).
 
-### Função MidPointLine
+Para avaliar a posição da reta em relação ao ponto médio citado no parágrafo anterior, é calculado o valor da equação implícita da reta naquele ponto $D(x+1,y+0,5) = a(x+1) + b(y+0,5) + c$ sendo $a = \Delta y$, $b = - \Delta x$ e $c = \Delta x * l$ ($l$ sendo o deslocamento no eixo y), caso o valor da equação seja 0, significa que a reta passa pelo ponto médio e o pixel E é escolhido e o próximo valor de decisão é dado por $D = D(x+1,y+0,5) + a$, o mesmo acontece caso o valor da equação seja positivo, caso contrário o pixel NE é escolhido e o próximo valor de decisão é dado por $D = D(x+1,y+0,5) + a + b$. 
+
+
+
+### Função MidPointLineAlgorithm
 
 Nesta função são passados como parâmetros $x0, y0, x1, y1, color$. Com isso podemos calcular os valores de $\Delta$, onde temos que $\Delta x = x1 - x0$ e $\Delta y = = y1 - y0$. Em seguida, calculamos o **D**, $d = 2deltaY - deltaX$, assim como, os incremementos da variável de decisão definidos por $inc_L = 2 \Delta y$ e $inc_NE = 2 * (\Delta y - \Delta x)$.
 
