@@ -5,32 +5,30 @@
 
 ### Rasterização de linhas
 
-A rasterização de linhas é a técnica utilizada para desenhar linhas em uma tela formada por pixels, também conhecidos como displays raster (eg., displays de LCD ou LED). Para realizar tal tarefa é normalmente utilizado algum algoritmo que escolhe um conjunto de pixels que serão utilizados para formar uma linha, isto é, uma primitiva matemática descrita por dois vértices, fornecendo as coordenadas destes no plano cartesiano, de uma forma que seja utilizado o menor número de pixels possível, uma vez que, matematicamente, uma linha é infinitamente fina. Na figura a seguir é apresentado um exemplo de como uma linha contínua pode ser representada de forma discretizada em um display raster.
+A rasterização de linhas é a técnica utilizada para desenhar linhas em uma tela formada por pixels, este tipo de tela também é conhecido como display raster (eg., displays de LCD ou LED). Para realizar tal tarefa é normalmente utilizado algum algoritmo que escolhe um conjunto de pixels que serão utilizados para formar uma linha, isto é, uma primitiva matemática descrita por dois vértices, fornecendo as coordenadas destes no plano cartesiano, de uma forma que seja utilizado o menor número de pixels possível, uma vez que, matematicamente, uma linha é infinitamente fina. Na figura a seguir é apresentado um exemplo de como uma linha contínua pode ser representada de forma discretizada em um display raster.
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Bresenham.svg/2000px-Bresenham.svg.png" alt="rasthered line" style="width:400px;transform:scaleX(-1);"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Bresenham.svg/2000px-Bresenham.svg.png" alt="rasthered line" style="width:300px;transform:scaleX(-1);"/>
 
 Existem diversos algoritmos para desempenhar tal tarefa. Neste Trabalho foi utilizado o algoritmo de Bresenham, que tem como base o critério do ponto médio e realiza apenas operações com números inteiros.
 
 ### Algoritmo de Bresenham
 
-O algoritmo funciona de forma incremental, levando em conta o pixel anterior para escolher o seguinte. Como o pixel inicial é um vértice conhecido de coordenadas (x0, y0), escolhem-se os seguintes a partir dele. Os candidatos são sempre o pixel imediatamente a leste (E) de coordenadas (x0+1, y0) ou a nordeste (NE) de coordenadas (x0+1, y0+1). 
+O algoritmo funciona de forma incremental, levando em conta o pixel anterior para escolher o seguinte. Como o pixel inicial é um vértice conhecido de coordenadas (x0, y0), escolhem-se os seguintes a partir dele. Os candidatos são sempre o pixel imediatamente a leste (L) de coordenadas (x0+1, y0) ou a nordeste (NE) de coordenadas (x0+1, y0+1). 
 
 A escolha do pixel é feita avaliando a posição da reta em relação ao ponto médio entre os pixels candidatos, tal ponto tem coordenadas (x0+1, y0+0,5). Este processo se repete para os demais vértices (xi, yi) até que seja alcançado o vértice final (x1, y1).
 
-Para avaliar a posição da reta em relação ao ponto médio citado no parágrafo anterior, é calculado o valor da equação implícita da reta naquele ponto $D(x+1,y+0,5) = a(x+1) + b(y+0,5) + c$ sendo $a = \Delta y$, $b = - \Delta x$ e $c = \Delta x * l$ ($l$ sendo o deslocamento no eixo y), caso o valor da equação seja 0, significa que a reta passa pelo ponto médio e o pixel E é escolhido e o próximo valor de decisão é dado por $D = D(x+1,y+0,5) + a$, o mesmo acontece caso o valor da equação seja positivo, caso contrário o pixel NE é escolhido e o próximo valor de decisão é dado por $D = D(x+1,y+0,5) + a + b$. 
+Para avaliar a posição da reta em relação ao ponto médio citado no parágrafo anterior, é calculado o valor da equação implícita da reta naquele ponto $D(x+1,y+0,5) = a(x+1) + b(y+0,5) + c$ sendo $a = \Delta y$, $b = - \Delta x$ e $c = \Delta x * l$ ($l$ sendo o deslocamento no eixo y), caso o valor da equação seja 0, significa que a reta passa pelo ponto médio e o pixel L é escolhido e o próximo valor de decisão é dado por $D = D(x+1,y+0,5) + a$, o mesmo acontece caso o valor da equação seja positivo. Já quando tal valor é negativo, o pixel NE é escolhido e o próximo valor de decisão é dado por $D = D(x+1,y+0,5) + a + b$. 
 
 Porém esta abordagem vale apenas para retas de coeficiente angular no intervalo \[0,1\], isto é, retas do primeiro octante de um plano cartesiano. Uma generalização pode ser realizada, como será mostrado nas seções seguintes.
 
 ### Implementação
 
-Num primeiro momento foi implementada apenas a função **MidPointLineAlgorithm**. Nesta função são passados como parâmetros $x0, y0, x1, y1, color_0, color_1$, sendo os dois primeiros as coordenadas do primeiro pixel, os dois seguintes as coordenadas do úlitmo e os dois últimos as cores inicial e final da linha, que mais tarde são interpoladas ao decorrer dela. Com isso podemos calcular os valores de $\Delta$, onde temos que $\Delta x = x1 - x0$ e $\Delta y = y1 - y0$. Em seguida, calculamos o **D**, $d = 2 \Delta y - \Delta x$, assim como, os incremementos da variável de decisão definidos por $inc_L = 2 \Delta y$ e $inc_NE = 2 * (\Delta y - \Delta x)$.
+Num primeiro momento foi implementada apenas a função **MidPointLineAlgorithm**. Nesta função são passados como parâmetros ```x0, y0, x1, y1, color_0, color_1```, sendo os dois primeiros as coordenadas do primeiro pixel, os dois seguintes as coordenadas do úlitmo e os dois últimos as cores inicial e final da linha, que mais tarde são interpoladas ao decorrer dela. Com isso podemos calcular os valores de $\Delta$, onde temos que $\Delta x = x1 - x0$ e $\Delta y = y1 - y0$. Em seguida, calculamos o **D**, $d = 2 \Delta y - \Delta x$, assim como, os incremementos da variável de decisão definidos por $inc\_L = 2 \Delta y$ e $inc\_NE = 2 * (\Delta y - \Delta x)$.
 
 Feito isso, iniciaremos os valores de x e y da seguinte forma, $x = x0$ e $y = y0$ e colorimos o pixel de coordenadas (x,y) com auxilio da função PutPixel, presente no framework fornecido pelo professor.
-
 Ademais repetiremos os passos anteriores enquanto $x < x1$. Dentro deste loop verificaremos se $d <= 0$ e incrementar d de inc_L, ou seja caminhar para direita, caso contrario incrementar d de inc_NE e incrementar y de uma unidade, caminhando em diagonal. 
 
 E por fim, chamamos a função PutPixel novamente para marcar o pixel com as coordenadas x e y.
-
 A implementação desta função na linguagem JavaScript é exibida a seguir.
 
 ```js
@@ -60,31 +58,31 @@ function MidPointLineAlgorithm(x0, y0, x1, y1, color_0, color_1) {
 }
 ```
 
-Como citado na seção anterior, esta versão do algoritmo é válida apenas para retas que passam pelo primeiro octante. Como a apresentada na imagem a seguir, produzida ao executar a função com os seguintes parâmetros. 
+Como citado na seção anterior, esta versão do algoritmo é válida apenas para retas que passam pelo primeiro octante. Como a apresentada na imagem a seguir, produzida ao executar a função com os seguintes parâmetros. Apesar da chamada da função apresentar dois parâmetro de cores, a reta apresenta apenas uma cor, pois ainda não passou pelo processo de interpolação.
 
 ```js
 MidPointLineAlgorithm(25, 30, 100,80, [255,0,0,255], [255,255,0,255]); 
  ```
 
-<img src="https://imgur.com/9BX6vUg.png" alt="rasthered line" style="width:400px;"/>
+<img src="https://imgur.com/9BX6vUg.png" alt="rasthered line" style="width:300px;"/>
 
-Para desenhar retas com diferentes coeficientes angulares, é proposta uma generalização do algoritmo a seguir.
+Para desenhar retas com diferentes coeficientes angulares, é proposta uma generalização do algoritmo na seção a seguir.
 
 ### Generalização
 
-Para realizar a generalização dos demais octantes pode-se utilizar o algoritmo implementado para o primeiro octante e realizar reflexões sobre os eixos. Sendo necessário verificar as distancias dos vértices no eixo x e do eixo y.
+Para realizar a generalização dos demais octantes pode-se utilizar o algoritmo implementado para o primeiro octante e realizar reflexões sobre os eixos. Sendo necessário verificar as distancias dos vértices no eixo x e no eixo y.
 
 Para realizarmos esta transformação podemos utilizar os seguintes passos:
 
 1. Primeiro, devemos calcular os valores de $\Delta x$ e $\Delta y$;
 2. Então devemos analisar os valores de $\Delta x$ e $\Delta y$ para determinar em qual octante a reta se encontra.
-3. Se o valor de $\Delta y$ for menor que o de $\Delta x$ utilizamos a função **plotLow** ou **plotHigh** para desenhar a reta ao longo do eixo x ou y, 
+3. Se o valor de $\Delta y$ for menor que o de $\Delta x$ utilizamos a função **plotLow** (1) para desenhar a reta ao longo do eixo x, caso contrário utilizamos a função **plotHigh** (2) para desenhar a reta ao longo do eixo y; 
     1. Se verificamos se x0 é maior que x1 se for, invertemos a ordem dos vértices para ser desenhada a linha, senão a ordem dos vértices é mantida, ambas utilizando a função **plotLow**;
     2. Se y0 for maior que y1, invertemos a ordem dos vértices para ser desenhada a linha, senão a ordem dos vértices é mantida, ambas utilizando a função **plotHigh**;
 
-Para implementar o algoritmo com tal generalização foi criada uma classe chamada Line, que recebe em seu construtor os parâmetros para a rasterização da linha, nela foram implementados os métodos **plotLow** e **plotHigh** para os propósitos já citados. A classe conta ainda com o método de interpolação de cores, explicado na seção a seguir.
+Para implementar o algoritmo com tal generalização foi criada a classe chamada Line, que recebe em seu construtor os parâmetros para a rasterização da linha, nela foram implementados os métodos (1) e (2) para os propósitos já citados. A classe conta ainda com o método de interpolação de cores, explicado na seção a seguir.
 
-A implementação da classe e seus métodos é apresentada a seguir, na linguagem JavaScript .
+A implementação da classe e seus métodos é apresentada a seguir, na linguagem JavaScript.
 
 ```js
 class Line {
@@ -93,7 +91,8 @@ class Line {
     this.y0 = y0;
     this.x1 = x1;
     this.y1 = y1;
-    this.color_0 = color_0;
+    this.color_0 pode
+    = color_0;
     this.color_1 = color_1;
   }
 
@@ -167,10 +166,9 @@ class Line {
     return color_result;
   }
 }
-
 ```
 
-Para realizar a verificação dos octantes e desenhar as linhas de acordo o resultado encontrado, foi implementada a função **MidPointLineAlgorithm**, mostrada a seguir.
+Para realizar a verificação dos octantes e desenhar as linhas de acordo o resultado encontrado, a função **MidPointLineAlgorithm** foi alterada como mostrado a seguir.
 
 ```js
 function MidPointLineAlgorithm(x0, y0, x1, y1, color_0, color_1) {
@@ -213,7 +211,7 @@ let db = (this.color_1[2] - this.color_0[2])/dx;
 
 Sendo ``dr`` o valor de incremento do canal vermelho, ``dg`` correspondendo ao canal verde e ``db`` ao canal azul.
 
-Dentro do laço de rasterização a cor do pixel é escolhida através da função ```colorInterpolation```, que toma como parâmetro a cor do pixel anterior e incrementa cada canal como já explicado. A função foi implementada como a seguir:
+Dentro do laço de rasterização a cor do pixel é escolhida através da função **colorInterpolation**, que toma como parâmetro a cor do pixel anterior e incrementa cada canal como já explicado. A função foi implementada como a seguir:
 
 ```js
 colorInterpolation(current_color, dr = 0, dg = 0, db = 0) {
@@ -234,7 +232,7 @@ MidPointLineAlgorithm(25, 30, 100,80, [255,0,0,255], [255,255,0,255]);
 ```
 resulta em:
 
-<img src="https://imgur.com/D7HQExH.png" alt="rasthered line" style="width:400px;"/>
+<img src="https://imgur.com/D7HQExH.png" alt="rasthered line" style="width:300px;"/>
 
 ### Triângulo
 Para desenhar o triangulo definimos tres pontos e interligamos os mesmos através da função **DrawTriangle**. Que foi implementada na linguagem JavaScript, como a seguir:
@@ -253,10 +251,15 @@ DrawTriangle(25, 30, 50, 100, 100, 15, [255,0,0,255], [0,0,255,255], [0,255,0,25
 ```
 
 Como resultado obtvemos a mostrada abaixo, onde é possivel notar a mudança gradual das cores no triangulo.
-<img src="https://imgur.com/K2Rp809.png" alt="rasthered line" style="width:400px;"/>
+
+<img src="https://imgur.com/K2Rp809.png" alt="rasthered line" style="width:300px;"/>
+
+O link para o link para o projeto na plataforma codePen encontra-se a seguir:
+
+- [https://codepen.io/felipends/pen/zYNOXmX](https://codepen.io/felipends/pen/zYNOXmX)
 
 ### Referências
-
+- [Vídeo sobre rasterização fornecido pelo professor.](https://youtu.be/tygja6rr62M)
 - [http://fleigfleig.blogspot.com/](http://fleigfleig.blogspot.com/)
 - [https://cflavs.wordpress.com/2016/03/10/cgt1-poligonos-e-interpolacao-de-cores/](https://cflavs.wordpress.com/2016/03/10/cgt1-poligonos-e-interpolacao-de-cores/)
 - [https://en.wikipedia.org/wiki/Bresenham's_line_algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm)
