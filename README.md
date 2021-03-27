@@ -259,7 +259,6 @@ O link para o link para o projeto na plataforma codePen encontra-se a seguir:
 - [https://codepen.io/felipends/pen/zYNOXmX](https://codepen.io/felipends/pen/zYNOXmX)
 
 ### Referências
-- [Vídeo sobre rasterização fornecido pelo professor.](https://youtu.be/tygja6rr62M)
 - [http://fleigfleig.blogspot.com/](http://fleigfleig.blogspot.com/)
 - [https://cflavs.wordpress.com/2016/03/10/cgt1-poligonos-e-interpolacao-de-cores/](https://cflavs.wordpress.com/2016/03/10/cgt1-poligonos-e-interpolacao-de-cores/)
 - [https://en.wikipedia.org/wiki/Bresenham's_line_algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm)
